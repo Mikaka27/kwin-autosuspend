@@ -1,0 +1,12 @@
+[Unit]
+Description=KWin autosuspend
+After=graphical.target
+
+[Service]
+Type=exec
+Restart=always
+RestartSec=1
+ExecStart=%h/.local/bin/kwin-autosuspend.sh
+
+[Install]
+WantedBy=multi-user.target
