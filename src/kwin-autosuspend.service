@@ -9,4 +9,4 @@ RestartSec=1
 ExecStart=%h/.local/bin/kwin-autosuspend.sh
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
