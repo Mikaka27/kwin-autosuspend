@@ -6,6 +6,10 @@
 # requires zero configuration
 # Credit where credit is due
 
+blacklist=""
+blacklist_path=~/.config/kwin-autosuspend/blacklist.txt
+[ -f "$blacklist_path" ] && blacklist=$(cat "$blacklist_path")
+
 function handle_exit() {
     turn_effects_on
     exit 0
@@ -62,6 +66,14 @@ xprop -spy -root _NET_ACTIVE_WINDOW | grep --line-buffered -o '0[xX][a-zA-Z0-9]\
 while read -r id; do
     check_kwin
     [ -n "$last_id" ] && [ "$last_id" == "$id" ] && continue
-    run_checks_on_window "$id" &
+    program_name="$(xprop -id "$id" WM_CLASS | awk '{print tolower($4)}')"
+    skip=0
+    for name in $blacklist; do
+        if [[ \"$name\" = $program_name ]]; then
+            skip=1
+            break
+        fi
+    done
+    [ $skip -eq 0 ] && run_checks_on_window "$id" &
     last_id=$id
 done
