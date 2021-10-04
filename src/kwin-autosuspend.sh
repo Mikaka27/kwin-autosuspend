@@ -6,9 +6,9 @@
 # requires zero configuration
 # Credit where credit is due
 
-blacklist=""
+blacklist="firefox"
 blacklist_path=~/.config/kwin-autosuspend/blacklist.txt
-[[ -f "$blacklist_path" ]] && blacklist=$(cat "$blacklist_path")
+[[ -f "$blacklist_path" ]] && blacklist="$blacklist $(cat $blacklist_path)"
 
 function handle_exit() {
     turn_effects_on
