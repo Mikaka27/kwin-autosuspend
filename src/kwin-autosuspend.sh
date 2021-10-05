@@ -48,7 +48,13 @@ run_checks_on_window() {
     while read -r state; do
         is_active="$(xprop -root _NET_ACTIVE_WINDOW | grep "$1")"
         if [[ -z "$is_active" ]]; then
-            fuser -k /proc/self/fd/0 &>/dev/null
+            processes=$(fuser /proc/self/fd/0 2>/dev/null | awk '{print $1 " " $2 " " $3}')
+            for pid in $processes; do
+                exe_path=$(ls -l /proc/$pid/exe 2>/dev/null | awk '{print $10}')
+                [[ -z "$exe_path" ]] && continue
+                exe_name=$(basename $exe_path)
+                [[ $exe_name == xprop ]] && kill $pid
+            done
             return
         fi
         is_fullscreen="$(echo "$state" | grep "_NET_WM_STATE_FULLSCREEN")"
