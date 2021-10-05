@@ -48,7 +48,7 @@ run_checks_on_window() {
     while read -r state; do
         is_active="$(xprop -root _NET_ACTIVE_WINDOW | grep "$1")"
         if [[ -z "$is_active" ]]; then
-            processes=$(fuser /proc/self/fd/0 2>/dev/null | awk '{print $1 " " $2 " " $3}')
+            processes=$(fuser /proc/self/fd/0 2>/dev/null)
             for pid in $processes; do
                 exe_path=$(ls -l /proc/$pid/exe 2>/dev/null | awk '{print $10}')
                 [[ -z "$exe_path" ]] && continue
